@@ -51,6 +51,7 @@ game.PlayerEntity = me.Entity.extend({
 
 });
 
+/*seeting the player and enemy's bases*/
 game.PlayerBaseEntity = me.Entity.extend({
 	init : function(x, y, settings) {
 		this._super(me.Entity, 'init', [x, y, {
@@ -68,6 +69,7 @@ game.PlayerBaseEntity = me.Entity.extend({
 		this.health = 10;
 		this.alwaysUpdate = true;
 		this.body.onCollision = this.onCollision.bind(this);
+		this.type = "PlayerBaseEntity";
 	},
 
 	update:function(delta){
@@ -80,6 +82,79 @@ game.PlayerBaseEntity = me.Entity.extend({
 
 	},
 
-	onCollision: function()
+	onCollision: function(){
+
+	}
+}});
+
+
+game.PlayerBaseEntity = me.Entity.extend({
+	init : function(x, y, settings) {
+		this._super(me.Entity, 'init', [x, y, {
+			image: "tower",
+			width: 100,
+			height:100,
+			spritewidth: "100",
+			spriteheight: "100",
+			getShape: function(){
+				/*the how many pixels the rectangle is*/
+				return {new me.Rect(0, 0, 100, 100)).toPolygon();
+			}
+		}]);
+		this.broken = false;
+		this.health = 10;
+		this.alwaysUpdate = true;
+		this.body.onCollision = this.onCollision.bind(this);
+		this.type = "PlayerBaseEntity";
+	},
+
+	update:function(delta){
+		if(this.health<-0){
+			this.broken = true;
+		}
+		this.body.update(delta);
+		this._super(me.Entity, "update", [delta]);
+		return true;
+
+	},
+
+	onCollision: function(){
+
+	}
+}});
+
+game.EnemyBaseEntity = me.Entity.extend({
+	init : function(x, y, settings) {
+		this._super(me.Entity, 'init', [x, y, {
+			image: "tower",
+			width: 100,
+			height:100,
+			spritewidth: "100",
+			spriteheight: "100",
+			getShape: function(){
+				/*the how many pixels the rectangle is*/
+				return {new me.Rect(0, 0, 100, 100)).toPolygon();
+			}
+		}]);
+		this.broken = false;
+		this.health = 10;
+		this.alwaysUpdate = true;
+		this.body.onCollision = this.onCollision.bind(this);
+		this.type = "EnemyBaseEntity";
+	},
+
+	update:function(delta){
+		if(this.health<-0){
+			this.broken = true;
+		}
+		this.body.update(delta);
+		this._super(me.Entity, "update", [delta]);
+		return true;
+
+	},
+
+	onCollision: function(){
+
+	}
 }});
 
