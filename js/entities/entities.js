@@ -14,7 +14,9 @@ game.PlayerEntity = me.Entity.extend({
 		}]);
 		/*velocity represents current position*/
 		this.body.setVelocity(5, 20);
-		/*when the action is done, the sprite that is equal to the number is put into play*/
+		/*following the player on the screen*/
+		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+		/*when the action is done, the sprite tat is equal to the number is put into play*/
 		this.renderable.addAnimation("idle", [78]);
 		/*the image number are olny used when the action "walk" is played*/
 		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
@@ -49,6 +51,7 @@ game.PlayerEntity = me.Entity.extend({
 		return true;
 	},
 
+
 });
 
 /*seeting the player and enemy's bases*/
@@ -62,7 +65,7 @@ game.PlayerBaseEntity = me.Entity.extend({
 			spriteheight: "100",
 			getShape: function(){
 				/*the how many pixels the rectangle is*/
-				return {new me.Rect(0, 0, 100, 100)).toPolygon();
+				return (new me.Rect(0, 0, 100, 100)).toPolygon();
 			}
 		}]);
 		this.broken = false;
@@ -70,11 +73,17 @@ game.PlayerBaseEntity = me.Entity.extend({
 		this.alwaysUpdate = true;
 		this.body.onCollision = this.onCollision.bind(this);
 		this.type = "PlayerBaseEntity";
+
+		this.renderable.addAnimation("idle", [0]);
+		this.renderable.addAnimation("broken", [1]);
+		this.renderable.setCurrentAnimation("idle");
+
 	},
 
 	update:function(delta){
 		if(this.health<-0){
 			this.broken = true;
+			this.renderable.setCurrentAnimation("broken");
 		}
 		this.body.update(delta);
 		this._super(me.Entity, "update", [delta]);
@@ -85,43 +94,8 @@ game.PlayerBaseEntity = me.Entity.extend({
 	onCollision: function(){
 
 	}
-}});
+});
 
-
-game.PlayerBaseEntity = me.Entity.extend({
-	init : function(x, y, settings) {
-		this._super(me.Entity, 'init', [x, y, {
-			image: "tower",
-			width: 100,
-			height:100,
-			spritewidth: "100",
-			spriteheight: "100",
-			getShape: function(){
-				/*the how many pixels the rectangle is*/
-				return {new me.Rect(0, 0, 100, 100)).toPolygon();
-			}
-		}]);
-		this.broken = false;
-		this.health = 10;
-		this.alwaysUpdate = true;
-		this.body.onCollision = this.onCollision.bind(this);
-		this.type = "PlayerBaseEntity";
-	},
-
-	update:function(delta){
-		if(this.health<-0){
-			this.broken = true;
-		}
-		this.body.update(delta);
-		this._super(me.Entity, "update", [delta]);
-		return true;
-
-	},
-
-	onCollision: function(){
-
-	}
-}});
 
 game.EnemyBaseEntity = me.Entity.extend({
 	init : function(x, y, settings) {
@@ -133,7 +107,7 @@ game.EnemyBaseEntity = me.Entity.extend({
 			spriteheight: "100",
 			getShape: function(){
 				/*the how many pixels the rectangle is*/
-				return {new me.Rect(0, 0, 100, 100)).toPolygon();
+				return (new me.Rect(0, 0, 100, 100)).toPolygon();
 			}
 		}]);
 		this.broken = false;
@@ -141,11 +115,16 @@ game.EnemyBaseEntity = me.Entity.extend({
 		this.alwaysUpdate = true;
 		this.body.onCollision = this.onCollision.bind(this);
 		this.type = "EnemyBaseEntity";
+		/*fixing the two towers*/
+		this.renderable.addAnimation("idle", [0]);
+		this.renderable.addAnimation("broken", [1]);
+		this.renderable.setCurrentAnimation("idle");
 	},
 
 	update:function(delta){
 		if(this.health<-0){
 			this.broken = true;
+			this.renderable.setCurrentAnimation("broken");
 		}
 		this.body.update(delta);
 		this._super(me.Entity, "update", [delta]);
@@ -156,5 +135,5 @@ game.EnemyBaseEntity = me.Entity.extend({
 	onCollision: function(){
 
 	}
-}});
+});
 
