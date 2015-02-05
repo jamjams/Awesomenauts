@@ -21,8 +21,11 @@ game.PlayerEntity = me.Entity.extend({
 		/*the image number are olny used when the action "walk" is played*/
 		this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
 		/*this is the current animatio when no keys are pressed. the sprite is idle and standing still.*/
+		this.renderable.addAnimation("attack", [65, 66, 67, 68, 69, 70, 71, 72], 80);
 		this.renderable.setCurrentAnimation("idle");
 	},
+
+
 
 	update: function(delta){
 		if(me.input.isKeyPressed("right")){
@@ -36,13 +39,36 @@ game.PlayerEntity = me.Entity.extend({
 		}else{
 			this.body.vel.x = 0;
 		}
+
+	if(me.input.isKeyPressed("attack")){
+			if(!this.renderable.isCurrentAnimation("attack")){
+				console.log(!this.renderable.isCurrentAnimation("attack"));
+				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
+				this.renderable.setCurrentAnimation("attack", "idle");
+				/*Makes it so that the next time we start this sequence we begin from the first animation,
+				not whereever we left off when we switched to another animation*/
+				this.renderable.setAnimationFrame();
+			}
+		}
 		
-		if(this.body.vel.x !== 0) {
+		
+		else if(this.body.vel.x !== 0) {
 			if(!this.renderable.isCurrentAnimation("walk")){
 				this.renderable.setCurrentAnimation("walk");
 			}
 		}else{
 			this.renderable.setCurrentAnimation("idle");
+		}
+
+		if(me.input.isKeyPressed("attack")){
+			if(!this.renderable.isCurrentAnimation("attack")){
+				console.log(!this.renderable.isCurrentAnimation("attack"));
+				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
+				this.renderable.setCurrentAnimation("attack", "idle");
+				/*Makes it so that the next time we start this sequence we begin from the first animation,
+				not whereever we left off when we switched to another animation*/
+				this.renderable.setAnimationFrame();
+			}
 		}
 
 		this.body.update(delta);
@@ -65,7 +91,7 @@ game.PlayerBaseEntity = me.Entity.extend({
 			spriteheight: "100",
 			getShape: function(){
 				/*the how many pixels the rectangle is*/
-				return (new me.Rect(0, 0, 100, 100)).toPolygon();
+				return (new me.Rect(0, 0, 100, 70)).toPolygon();
 			}
 		}]);
 		this.broken = false;
@@ -107,7 +133,7 @@ game.EnemyBaseEntity = me.Entity.extend({
 			spriteheight: "100",
 			getShape: function(){
 				/*the how many pixels the rectangle is*/
-				return (new me.Rect(0, 0, 100, 100)).toPolygon();
+				return (new me.Rect(0, 0, 100, 70)).toPolygon();
 			}
 		}]);
 		this.broken = false;
