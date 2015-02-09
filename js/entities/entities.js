@@ -15,6 +15,9 @@ game.PlayerEntity = me.Entity.extend({
 		/*velocity represents current position*/
 		this.body.setVelocity(5, 20);
 		this.facing = "right";
+		this.now = new Date().getTime();
+		this.lastHit = this.now;
+		this.lastAttack = new Date().getTime();
 		/*following the player on the screen*/
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 		/*when the action is done, the sprite tat is equal to the number is put into play*/
@@ -29,6 +32,7 @@ game.PlayerEntity = me.Entity.extend({
 
 
 	update: function(delta){
+		this.now = new Date().getTime();
 		if(me.input.isKeyPressed("right")){
 			/*adds to the position of my x by the velocity defined above in 
 			setVelocity() and multiplying it by me.time.tick.
@@ -99,13 +103,18 @@ game.PlayerEntity = me.Entity.extend({
 				this.pos.x = this.pos.x -1;
 
 			}
-			else if(xdif>35 && this.facing==='right' && xdif>0){
+			else if(xdif>35 && this.facing==='right' && xdif<0){
 				this.body.vel.x = 0;
 				this.pos.x = this.pos.x -1;
 			}else if(xdif<70 && this.facing==='left' && xdif>0){
 				this.body.vel.x = 0;
 				this.body.vel.x = this.pos.x +1;
 			}
+
+			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000);
+				console.log("tower Hit");
+				this.lastHit = this.now;
+				response.b.loseHealth();
 		}
 	}
 });
@@ -190,6 +199,10 @@ game.EnemyBaseEntity = me.Entity.extend({
 
 	onCollision: function(){
 
+	},
+
+	loseHealth: function(){
+		this.health--;
 	}
 });
 
