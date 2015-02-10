@@ -226,8 +226,19 @@ game.EnemyCreep = me.Entity.extend({
 		this.renderable.setCurrentAnimation("walk");
 	},
 
-	update: function(){
+	update: function(delta){
+/*making the creeps move across the screen*/
+		this.body.vel.x -= this.body.accel.x  * me.timer.tick;
 
+
+		this.body.update(delta);
+
+
+
+
+		this._super(me.Entity, "update", [delta]);
+		
+		return true;
 	}
 });
 /*setting the timer for when the creep will spawn and attack the player.*/
