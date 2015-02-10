@@ -56,7 +56,7 @@ game.PlayerEntity = me.Entity.extend({
 
 	if(me.input.isKeyPressed("attack")){
 			if(!this.renderable.isCurrentAnimation("attack")){
-				console.log(!this.renderable.isCurrentAnimation("attack"));
+				/*console.log(!this.renderable.isCurrentAnimation("attack"));*/
 				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
 				this.renderable.setCurrentAnimation("attack", "idle");
 				/*Makes it so that the next time we start this sequence we begin from the first animation,
@@ -205,7 +205,7 @@ game.EnemyBaseEntity = me.Entity.extend({
 		this.health--;
 	}
 });
-
+/*setting the properties for the enemy creep and setting the actions for it also*/
 game.EnemyCreep = me.Entity.extend({
 	init: function(x, y, settings){
 		this._super(me.Entity, 'init', [x, y, {
@@ -220,9 +220,33 @@ game.EnemyCreep = me.Entity.extend({
 		}]);
 		this.health = 10;
 		this.alwaysUpdate = true;
+		this.body.setVelocity(3,20);
+		this.type = "EnemyCreep";
+		this.renderable.addAnimation("walk", [3, 4, 5], 80);
+		this.renderable.setCurrentAnimation("walk");
 	},
 
 	update: function(){
 
+	}
+});
+/*setting the timer for when the creep will spawn and attack the player.*/
+game.GameManager = Object.extend({
+	init: function(x, y, settings){
+		this.now = new Date().getTime();
+		this.lastCreep = new Date().getTime();
+
+		this.alwaysUpdate = true;
+	},
+
+	update: function(){
+		this.now = new Date().getTime();
+
+		if(Math.round(this.now/1000)%10 ===0 && (this.now - this.lastCreep >= 1000)){
+			this.lastCreep = this.now;
+			var creep = me.pool.pull("EnemyCreep", 1000, 0, {});
+			me.game.world.addChild(creep, 5);
+		}
+		return true;
 	}
 });
