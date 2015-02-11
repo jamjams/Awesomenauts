@@ -151,11 +151,15 @@ game.PlayerBaseEntity = me.Entity.extend({
 			this.renderable.setCurrentAnimation("broken");
 		}
 		this.body.update(delta);
+		
 		this._super(me.Entity, "update", [delta]);
 		return true;
 
 	},
 
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+	},
 	onCollision: function(){
 
 	}
@@ -220,6 +224,13 @@ game.EnemyCreep = me.Entity.extend({
 		}]);
 		this.health = 10;
 		this.alwaysUpdate = true;
+		/*this.attacking lets us know if the enemy is currently attacking*/
+		this.attacking = false;
+		/*keeps traack of when our creep last attacked anything*/
+		this.lastAttacking = new Date().getTime();
+		/*keep track of the last time our creep hit anything*/
+		this.lastHit = new Date().getTime()
+		this.now = new Date().getTime();
 		this.body.setVelocity(3,20);
 		this.type = "EnemyCreep";
 		this.renderable.addAnimation("walk", [3, 4, 5], 80);
@@ -228,8 +239,11 @@ game.EnemyCreep = me.Entity.extend({
 
 	update: function(delta){
 /*making the creeps move across the screen*/
+		this.now = new Date().getTime();
+		
 		this.body.vel.x -= this.body.accel.x  * me.timer.tick;
 
+		me.collision.check(this, true, this.collideHandler.bind(this), true);
 
 		this.body.update(delta);
 
@@ -237,9 +251,26 @@ game.EnemyCreep = me.Entity.extend({
 
 
 		this._super(me.Entity, "update", [delta]);
-		
 		return true;
+	},
+
+	collideHandler: function(response){
+		if(response.b.type==='PlayerBase'){
+			this.attacking=true;
+			/*this.lastAttacking=this.now;*/
+			this.body.vel.x = 0;
+			/*keeps moving the creep to the right to maintain its position*/
+			this.pos.x = this.pos.x + 1;
+			/*checks that it has been at least 1 second since this creep hit a base*/
+			if((this.now-this.lastHit >=1000)){
+				/*updates the lasthit timer*/
+				this.lastHit = this.now;
+				/*makes the player base call its loseHealth functin and passes it a damage of 1*/
+				response.b.loseHealth(1);
+			}
+		}
 	}
+
 });
 /*setting the timer for when the creep will spawn and attack the player.*/
 game.GameManager = Object.extend({
