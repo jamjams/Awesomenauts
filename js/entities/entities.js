@@ -13,7 +13,9 @@ game.PlayerEntity = me.Entity.extend({
 			}
 		}]);
 		/*velocity represents current position*/
-		this.body.setVelocity(5, 20);
+		this.type = "PlayerEntity";
+		this.health = 20;
+		this.body.setVelocity(7, 20);
 		this.facing = "right";
 		this.now = new Date().getTime();
 		this.lastHit = this.now;
@@ -41,17 +43,22 @@ game.PlayerEntity = me.Entity.extend({
 			this.facing = "right";
 			this.flipX(true);
 		}else if(me.input.isKeyPressed("left")){
-			this.facing = "left";
-			this.body.vel.x -=this.body.accel.x * me.timer.tick;
-			this.flipX(false);
-		
-		}else{
-			this.body.vel.x = 0;
-		}
+			  
 
-	if(me.input.isKeyPressed("jump") && !this.jumping && !this.falling){
-		this.jumping = true;
-		this.body.vel.y -=this.body.accel.y * me.timer.tick;
+			this.body.vel.x -=this.body.accel.x * me.timer.tick;
+			this.facing = "left";
+			this.flipX(false);
+/*adding the jump function*/
+}else if (me.input.isKeyPressed('jump')) {
+	if (!this.body.jumping && !this.body.falling) {
+		/*set current vel to the maximim defined value
+		gravity will do the rest*/
+		this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+		/*set the jumping flag*/
+		this.body.jumping = true;
+	}
+}else{
+		this.body.vel.x = 0;
 	}
 
 	if(me.input.isKeyPressed("attack")){
@@ -91,11 +98,16 @@ game.PlayerEntity = me.Entity.extend({
 		this._super(me.Entity, "update", [delta]);
 		return true;
 	},
+
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+		console.log(this.health);
+	},
 /*setting what is going to happen tothe player when it gets to the enemy base and also setting our own methods*/
 	collideHandler: function(response){
 		if(response.b.type==='EnemyBaseEntity'){
-			var ydif = this.pos.y - response.b.pos.y;
 			var xdif = this.pos.x - reponse.b.pos.x;
+			var ydif = this.pos.y - response.b.pos.y;
 			
 /*what is going to happen when we are cgetting near the enemy base from the left*/
 			if(ydif<-40 && xdif< 70 && xdif>-35){ 
@@ -255,7 +267,7 @@ game.EnemyCreep = me.Entity.extend({
 	},
 
 	collideHandler: function(response){
-		if(response.b.type==='PlayerBase'){
+		if(response.b.type==='PlayerBaseEntity'){
 			this.attacking=true;
 			/*this.lastAttacking=this.now;*/
 			this.body.vel.x = 0;
@@ -266,6 +278,26 @@ game.EnemyCreep = me.Entity.extend({
 				/*updates the lasthit timer*/
 				this.lastHit = this.now;
 				/*makes the player base call its loseHealth functin and passes it a damage of 1*/
+				response.b.loseHealth(1);
+			}
+		}else if(response.b.type==='PlayerEntity'){
+			var xdif = this.pos.x - response.b.pos.x;
+
+			this.attacking=true;
+			/*this.lastAttacking=this.now;*/
+			/*keeps moving the creep to the right to maintain its position*/
+			if(xdif>0){
+				
+				this.pos.x = this.pos.x + 1;
+				this.body.vel.x = 0;
+			}
+			
+			this.pos.x = this.pos.x + 1;
+			/*checks that it has been at least 1 second since this creep hit something*/
+			if((this.now-this.lastHit >=1000) && xdif>0){
+				/*updates the lasthit timer*/
+				this.lastHit = this.now;
+				/*makes the player call its loseHealth functin and passes it a damage of 1*/
 				response.b.loseHealth(1);
 			}
 		}
