@@ -123,10 +123,40 @@ game.PlayerEntity = me.Entity.extend({
 				this.body.vel.x = this.pos.x +1;
 			}
 
-			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000);
+			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000){
 				console.log("tower Hit");
 				this.lastHit = this.now;
 				response.b.loseHealth();
+			}
+		}
+		else if(response.b.type==='EnemyCreep'){
+			var xdif = this.pos.x - response.b.pos.x;
+			var ydif = this.pos.y - response.b.pos.y;
+			/*keeping the enemy from going through the base*/
+			if (xdif>0){
+				/*pushing the player to the right if the x dif is greater than zero*/
+				tihs.pos.x = this.pos.x + 1;
+				if(this.facing==="left"){
+					this.body.vel.x - 0;
+				}
+				/*keeping track of which the player is facing*/
+			}
+			else
+			{
+				/*we can not do damage to the creep*/
+				/*cant walk through the creep no matter what direction we are coming from*/
+				this.pos.x = this.pos.x - 1;
+				if(this.facing==="right"){
+					this.body.vel.x = 0;
+				}
+			}
+			if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= 1000
+				/*making sure that we can only kill the creep if the player is facing it*/
+				&& (Math.abs(ydif) <=40) && (((xdif>0) && this.facing ==="left") || ((xdif<0) && this.facing==="right"))){
+				
+				this.lastHit = this.now;
+				response.b.loseHealth(1);
+			}
 		}
 	}
 });
@@ -249,7 +279,17 @@ game.EnemyCreep = me.Entity.extend({
 		this.renderable.setCurrentAnimation("walk");
 	},
 
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+	},
+
 	update: function(delta){
+		console.log(this.health);
+		if (this.health <= 0) {
+			me.game.world.removeChild(this);
+		};
+
+
 /*making the creeps move across the screen*/
 		this.now = new Date().getTime();
 		
