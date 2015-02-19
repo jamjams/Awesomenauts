@@ -40,7 +40,9 @@ game.PlayerEntity = me.Entity.extend({
 
 		if (this.health <= 0){
 			this.dead = true;
-			this.pos.x = 
+			this.pos.x = 10;
+			this.pos.y = 0;
+			this.health = game.data.playerHealth;
 		}
 
 
