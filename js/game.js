@@ -5,7 +5,24 @@ var game = {
 	/*an object where to store game information*/
 	data : {
 		/*core*/
-		score : 0
+		/*subsittuting the player and enemy entity properties with these methods*/
+		score : 0,
+		enemyBaseHealth: 10,
+		playerBaseHealth: 10,
+		EnemyCreepHealth:10,
+		playerHealth: 10,
+		enemyCreepAttack: 1,
+		playerAttack: 1,
+	  /*orcBaseDamage: 10,
+		orcBaseHealth: 200,
+		orcBaseSpeed: 3,
+		orcBaseDefense: 0,*/
+		playerAttackTimer: 1000,
+		creepAttackTimer: 1000,
+		playerMoveSpeed: 7;
+		creepMoveSpeed: 5,
+		gameManager: "",
+		player: "",
 	},
 	
 	
