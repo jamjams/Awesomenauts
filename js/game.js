@@ -19,7 +19,7 @@ var game = {
 		orcBaseDefense: 0,*/
 		playerAttackTimer: 1000,
 		creepAttackTimer: 1000,
-		playerMoveSpeed: 7;
+		playerMoveSpeed: 7,
 		creepMoveSpeed: 5,
 		gameManager: "",
 		player: "",
@@ -61,10 +61,11 @@ var game = {
 		me.pool.register("EnemyBase", game.EnemyBaseEntity);
 		me.pool.register("EnemyCreep", game.EnemyCreep, true);
 		me.pool.register("GameManager", game.GameManager);
+		
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 
 		/*Start the game.*/
-		me.state.change(me.state.PLAY);
+		me.state.change(me.state.MENU);
 	}
 };

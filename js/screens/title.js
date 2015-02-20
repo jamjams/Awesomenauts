@@ -2,8 +2,9 @@ game.TitleScreen = me.ScreenObject.extend({
 	/**	
 	 *  action to perform on state change
 	 */
-	onResetEvent: function() {	
-		; // TODO
+	onResetEvent: function() {
+	/*setting up the title screen*/	
+		me.game.world.addChild(new me.Sprite(0, 0, me.loader.getImage('title-screen')), -10); // TODO
 	},
 	
 	
