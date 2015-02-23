@@ -296,6 +296,44 @@ game.EnemyCreep = me.Entity.extend({
 		if (this.health <= 0) {
 			me.game.world.removeChild(this);
 		};
+/*making the 1st intermediate: Build a Creep Teammate*/
+/*game.EnemyCreep = me.Entity.extend({
+	init: function(x, y, settings){
+		this._super(me.Entity, 'init', [x, y, {
+			image: "creep1",
+			width: 32,
+			height: 64,
+			spritewidth: "32",
+			spriteheight: "64",
+			getShape: function(){
+				return (new me.Rect(0, 0, 32, 64)).toPolygon();
+			}
+		}]);
+		this.health = game.data.enemyCreepHealth;
+		this.alwaysUpdate = true;
+		/*this.attacking lets us know if the enemy is currently attacking*/
+		this.attacking = false;
+		/*keeps traack of when our creep last attacked anything*/
+		this.lastAttacking = new Date().getTime();
+		/*keep track of the last time our creep hit anything*/
+		this.lastHit = new Date().getTime()
+		this.now = new Date().getTime();
+		this.body.setVelocity(3,20);
+		this.type = "EnemyCreep";
+		this.renderable.addAnimation("walk", [3, 4, 5], 80);
+		this.renderable.setCurrentAnimation("walk");
+	},
+
+	loseHealth: function(damage){
+		this.health = this.health - damage;
+	},
+
+	update: function(delta){
+		console.log(this.health);
+		if (this.health <= 0) {
+			me.game.world.removeChild(this);
+		};
+*/
 
 
 /*making the creeps move across the screen*/
@@ -352,6 +390,8 @@ game.EnemyCreep = me.Entity.extend({
 	}
 
 });
+
+
 /*setting the timer for when the creep will spawn and attack the player.*/
 game.GameManager = Object.extend({
 	init: function(x, y, settings){
