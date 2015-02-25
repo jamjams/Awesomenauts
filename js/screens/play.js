@@ -10,6 +10,9 @@ game.PlayScreen = me.ScreenObject.extend({
 		var player = me.pool.pull("player", 0, 0, {});
 		me.game.world.addChild(player, 5);
 		
+		var gamemanager = me.pool.pull("GameManager", 0, 0, {});
+		me.game.world.addChild(gamemanager, 0);
+		
 		this.resetPlayer(0, 420);
 
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
@@ -19,6 +22,7 @@ game.PlayScreen = me.ScreenObject.extend({
 		/*add our HUD to the game world*/
 		this.HUD = new game.HUD.Container();
 		me.game.world.addChild(this.HUD);
+
 		me.audio.playTrack("blankSpace");
 	},
 
