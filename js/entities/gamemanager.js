@@ -27,3 +27,4 @@ game.GameManager = Object.extend({
 		return true;
 	}
 });
+/*added into its own file*/
