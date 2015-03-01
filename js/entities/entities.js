@@ -43,9 +43,11 @@ game.PlayerEntity = me.Entity.extend({
 	},
 
 	setFlags: function(){
+		/*keeps track of which direction your character is going*/
 		this.facing = "right";
 		this.dead = false;
-	}
+		this.attacking = false;
+	},
 
 	addAnimation: function(){
 		this.renderable.addAnimation("idle", [78]);
@@ -63,40 +65,9 @@ game.PlayerEntity = me.Entity.extend({
 		this.dead = checkIfDead();
 
 		this.checkKeyPressedAndMove();
+	
+		this.setAnimation();
 		
-		
-
-	if(me.input.isKeyPressed("attack")){
-			if(!this.renderable.isCurrentAnimation("attack")){
-				/*console.log(!this.renderable.isCurrentAnimation("attack"));*/
-				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
-				this.renderable.setCurrentAnimation("attack", "idle");
-				/*Makes it so that the next time we start this sequence we begin from the first animation,
-				not whereever we left off when we switched to another animation*/
-				this.renderable.setAnimationFrame();
-			}
-		}
-		
-		
-
-		else if(this.body.vel.x !== 0) {
-			if(!this.renderable.isCurrentAnimation("walk")){
-				this.renderable.setCurrentAnimation("walk");
-			}
-		}else{
-			this.renderable.setCurrentAnimation("idle");
-		}
-
-		if(me.input.isKeyPressed("attack")){
-			if(!this.renderable.isCurrentAnimation("attack")){
-				console.log(!this.renderable.isCurrentAnimation("attack"));
-				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
-				this.renderable.setCurrentAnimation("attack", "idle");
-				/*Makes it so that the next time we start this sequence we begin from the first animation,
-				not whereever we left off when we switched to another animation*/
-				this.renderable.setAnimationFrame();
-			}
-		}
 		me.collision.check(this, true, this.collideHandler.bind(this), true);
 		this.body.update(delta);
 
@@ -117,13 +88,16 @@ game.PlayerEntity = me.Entity.extend({
 		}else if(me.input.isKeyPressed("left")){
 			  this.moveLeft();
 /*adding the jump function*/
-}else if (me.input.isKeyPressed('jump')) {
-	if (!this.body.jumping && !this.body.falling) {
+		}else if (me.input.isKeyPressed('jump')) {
+		if (!this.body.jumping && !this.body.falling) {
 		this.jump();
-	}
-}else{
+		}
+		}else{
 		this.body.vel.x = 0;
 		}
+
+		this.attacking = me.input.isKeyPressed("attack");
+
 	},
 
 	moveRight: function(){
@@ -148,6 +122,29 @@ jump: function(){
 	this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
 	/*set the jumping flag*/
 	this.body.jumping = true;
+},
+
+setAnimation: function(){
+	if(this.attacking){
+			if(!this.renderable.isCurrentAnimation("attack")){
+				/*console.log(!this.renderable.isCurrentAnimation("attack"));*/
+				/*sets the currents animation to attack and once that is over goes back to the idle animation*/
+				this.renderable.setCurrentAnimation("attack", "idle");
+				/*Makes it so that the next time we start this sequence we begin from the first animation,
+				not whereever we left off when we switched to another animation*/
+				this.renderable.setAnimationFrame();
+			}
+		}
+		
+		
+
+		else if(this.body.vel.x !== 0) {
+			if(!this.renderable.isCurrentAnimation("walk")){
+				this.renderable.setCurrentAnimation("walk");
+			}
+		}else{
+			this.renderable.setCurrentAnimation("idle");
+		}
 },
 
 	loseHealth: function(damage){
