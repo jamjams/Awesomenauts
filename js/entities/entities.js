@@ -191,8 +191,8 @@ setAnimation: function(){
 		this.stopMovement(xdif);
 
 		if(this.checkAttack(xdif, ydif)){
-
-		},
+			this.hitCreep(response);
+		};
 			
 	},
 
@@ -225,5 +225,15 @@ setAnimation: function(){
 				 
 				 return true;
 			}
+			return false;
+	}
+
+	hitCreep: function(response){
+		if(response.b.health <= game.data.playerAttack){
+				game.data.gold +1;
+				console.log("Current gold" + game.data.gold);
+			}
+			
+			response.b.loseHealth(game.data.playerAttack);
 	}
 });
