@@ -1,6 +1,6 @@
 game.PlayerEntity = me.Entity.extend({
 	init: function(x, y, settings) {
-		this.setSuper();
+		this.setSuper(x, y);
 		this.setPlayerTimers();
 		this.setAttributes();
 		this.type = "PlayerEntity";
@@ -14,8 +14,7 @@ game.PlayerEntity = me.Entity.extend({
 		/*when the action is done, the sprite tat is equal to the number is put into play*/
 		this.renderable.setCurrentAnimation("idle");
 	},
-	/**/
-	setSuper: function(){
+	setSuper: function(x, y){
 		this._super(me.Entity, 'init', [x, y, {
 			image:"player",
 			/*telling the screen how much space to preserve*/
@@ -61,18 +60,13 @@ game.PlayerEntity = me.Entity.extend({
 
 	update: function(delta){
 		this.now = new Date().getTime();
-
-		this.dead = checkIfDead();
-
+		this.dead = this.checkIfDead();
 		this.checkKeyPressedAndMove();
-	
 		this.setAnimation();
-		
 		me.collision.check(this, true, this.collideHandler.bind(this), true);
 		this.body.update(delta);
-
 		this._super(me.Entity, "update", [delta]);
-			 Ereturn true;
+		return true;
 	},
 
 	checkIfDead: function(){
@@ -157,7 +151,7 @@ setAnimation: function(){
 			this.collideWithEnemyBase(response);
 		}
 		else if(response.b.type==='EnemyCreep'){
-			this.collideWithEnemyCreep(response)''
+			this.collideWithEnemyCreep(response);
 		}
 	},
 
@@ -192,7 +186,7 @@ setAnimation: function(){
 
 		if(this.checkAttack(xdif, ydif)){
 			this.hitCreep(response);
-		};
+		}
 			
 	},
 
@@ -201,7 +195,7 @@ setAnimation: function(){
 		if (xdif>0){
 			/*pushing the player to the right if the x dif is greater than zero*/
 				if(this.facing==="left"){
-					this.body.vel.x - 0;
+					this.body.vel.x = 0;
 				}
 				/*keeping track of which the player is facing*/
 			}
@@ -216,7 +210,7 @@ setAnimation: function(){
 	},
 
 	checkAttack: function(xdif, ydif){
-		if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttack
+		if(this.renderable.isCurrentAnimation("attack") && this.now-this.lastHit >= game.data.playerAttackTimer
 				/*making sure that we can only kill the creep if the player is facing it*/
 				&& (Math.abs(ydif) <=40) && (((xdif>0) && this.facing ==="left") || ((xdif<0) && this.facing==="right"))){
 				
@@ -226,12 +220,13 @@ setAnimation: function(){
 				 return true;
 			}
 			return false;
-	}
+	},
+
 
 	hitCreep: function(response){
 		if(response.b.health <= game.data.playerAttack){
-				game.data.gold +1;
-				console.log("Current gold" + game.data.gold);
+				game.data.gold += 1;
+				/*console.log("Current gold" + game.data.gold);*/
 			}
 			
 			response.b.loseHealth(game.data.playerAttack);
