@@ -7,13 +7,19 @@ game.PlayScreen = me.ScreenObject.extend({
 		game.data.score = 0;
 /*showing the map*/
 		me.levelDirector.loadLevel("level01");
-		var player = me.pool.pull("player", 0, 0, {});
-		me.game.world.addChild(player, 5);
-		
-		var gamemanager = me.pool.pull("GameManager", 0, 0, {});
-		me.game.world.addChild(gamemanager, 0);
-		
+
 		this.resetPlayer(0, 420);
+
+
+		var gameTimerManager = me.pool.pull("GameTimerManager", 0, 0, {});
+		me.game.world.addChild(gameTimerManager, 0);
+		
+		var heroDeathManager = me.pool.pull("HeroDeathManager", 0, 0, {});
+		me.game.world.addChild(heroDeathManager, 0);
+		
+		var experienceManager = me.pool.pull("ExperienceManager", 0, 0, {});
+		me.game.world.addChild(experienceManager, 0);
+		
 
 		me.input.bindKey(me.input.KEY.RIGHT, "right");
 		me.input.bindKey(me.input.KEY.LEFT, "left");
