@@ -7,9 +7,9 @@ var game = {
 		/*core*/
 		/*subsittuting the player and enemy entity properties with these methods*/
 		score : 0,
-		enemyBaseHealth: 10,
-		playerBaseHealth: 10,
-		EnemyCreepHealth:1,
+		enemyBaseHealth: 1,
+		playerBaseHealth: 1,
+		EnemyCreepHealth:10,
 		playerHealth: 10,
 		enemyCreepAttack: 1,
 		playerAttack: 1,
@@ -19,7 +19,7 @@ var game = {
 		orcBaseDefense: 0,*/
 		playerAttackTimer: 1000,
 		creepAttackTimer: 1000,
-		playerMoveSpeed: 7,
+		playerMoveSpeed: 5,
 		creepMoveSpeed: 5,
 		gameTimerManager: "",
 		heroDeathManager: "",
@@ -50,6 +50,7 @@ var game = {
 	}
 
 	me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});
+	
 
 	/*Initialize the audio.*/
 	me.audio.init("mp3,ogg");
