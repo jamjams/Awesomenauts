@@ -11,7 +11,7 @@ game.SpendExp = me.ScreenObject.extend({
 		me.input.bindKey(me.input.KEY.F3, "F3");
 		me.input.bindKey(me.input.KEY.F4, "F4");
 		me.input.bindKey(me.input.KEY.F5, "F5");
-
+		var exp1cost = ((game.data.exp1 + 1) * 10);
 
 		/*setting the key we need to press in order to start the game*/
 
@@ -27,8 +27,8 @@ game.SpendExp = me.ScreenObject.extend({
 				/*this where we set what is going to be printed out to the title screen and also setting the color of the text and what font the text is*/
 				this.font.draw(renderer.getContext(), "PRESS f1-f4 TO BUY, F5 TO SKIP", this.pos.x, this.pos.y);
 				this.font.draw(renderer.getContext(), "CURRENT EXP" + game.data.exp.toString(), this.pos.x + 100, this.pos.y + 50);
-				this.font.draw(renderer.getContext(), "F1: INCREMENT GOLD PRODUCTION CURRRENT LEVEL:" + game.data.exp1.toString() + " COST: " + ((game.data.exp1 + 1) * 10), this.pos.x, this.pos.y + 100);
-				this.font.draw(renderer.getContext(), "F2: ADD STARTING GOLD ", this.pos.x, this.pos.y + 15);
+				this.font.draw(renderer.getContext(), "F1: INCREMENT GOLD PRODUCTION CURRRENT LEVEL:" + game.data.exp1.toString() + " COST: " + exp1cost, this.pos.x, this.pos.y + 100);
+				this.font.draw(renderer.getContext(), "F2: ADD STARTING GOLD ", this.pos.x, this.pos.y + 150);
 				this.font.draw(renderer.getContext(), "F3: INCREADE ATTACK DAMAGE ", this.pos.x, this.pos.y + 200);
 				this.font.draw(renderer.getContext(), "F4: INCREASE STARTING HEALTH ", this.pos.x, this.pos.y + 250);
 				/*stylizing the Press enter to play text. tellng you how to start the game*/	
@@ -37,7 +37,13 @@ game.SpendExp = me.ScreenObject.extend({
 
 		this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
 			if(action === "F1"){
-
+				if(game.data.exp >= exp1cost){
+					game.data.exp1 += 1;
+					game.data.exp -= exp1cost;
+					me.state.change(me.state.PLAY);
+				}else{
+					console.log("not enough experience");
+				}
 			}else if(action === "F2"){
 
 			}else if(action === "F3"){
