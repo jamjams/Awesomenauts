@@ -20,7 +20,6 @@ game.SpendExp = me.ScreenObject.extend({
 				this._super(me.Renderable, 'init', [10, 10, 300, 50, me.game.viewport.width, me.game.viewport.height]);
 				this.font = new me.Font("Arial", 26, "purple");
 				/*listing for the pointer to be down*/
-				me.input.registerPointerEvent('pointerdown', this.newGame.bind(this), true);
 			},
 
 			draw: function(renderer){
