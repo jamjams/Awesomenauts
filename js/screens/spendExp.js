@@ -18,7 +18,7 @@ game.SpendExp = me.ScreenObject.extend({
 		me.game.world.addChild(new (me.Renderable.extend({
 			init: function() {
 				this._super(me.Renderable, 'init', [10, 10, 300, 50, me.game.viewport.width, me.game.viewport.height]);
-				this.font = new me.Font("Arial", 26, "purple");
+				this.font = new me.Font("Arial", 26, "white");
 				/*listing for the pointer to be down*/
 			},
 
